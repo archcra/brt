@@ -1,0 +1,4 @@
+
+import loadTrainData
+
+loadTrainData.getImagesData()

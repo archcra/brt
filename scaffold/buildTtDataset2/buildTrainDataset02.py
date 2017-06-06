@@ -1,37 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
+# This can use any images with name pattern: rb001.png
+# first letter is used in FIN, r is rook, b is color: black
 
 
 from struct import *
 from PIL import Image
+import glob
 
 h, w = 74, 70
-
-def filterAndRevert(img):
-    for row in range(0, h): # height is 1280
-        for col in range(0,w):
-            pixel = img.getpixel((col, row))
-            if(pixel > 140): # 这个值与测试图片组有关
-                img.putpixel((col, row), 0)
-            else:
-                img.putpixel((col, row),255 -pixel )
-            # end if
-        # end inner for
-    # end outer for
     
-    # resize
-    smallImage = img.resize((wResized,hResized))
-    smallImage.save('output/small.png')
-    return smallImage
-    
-    
+imageFileName = "output/brt-train-images02.data"
+labelFileName = "output/brt-train-labels02.data"
 
-imageFileName = "output/brt-train-images.data"
-labelFileName = "output/brt-train-labels.data"
-
-imagesPath = "/Users/papa/vcs/github/brt/scaffold/buildTtDataset/chessmen/"
+imagesPath = "/Users/papa/vcs/github/brt/scaffold/buildTtDataset2/chessmen/"
+imagesFilter = imagesPath + "*.png"
 
 imageDataFile=open(imageFileName,'wb')
 labelDataFile=open(labelFileName,'wb')
@@ -42,9 +26,9 @@ imageDataFile.write(pack('>i', 20170606))
 labelDataFile.write(pack('>i', 20170606))
 
 # Read all images from a foler
-import os
-imageFiles = os.listdir(imagesPath)
-print (imageFiles)
+# import os
+# imageFiles = os.listdir(imagesPath)
+imageFiles = glob.glob(imagesFilter)
 
 # write the count# 写count: 4 bytes
 imageDataFile.write(pack('>i', len(imageFiles)))
@@ -62,14 +46,15 @@ imageDataFile.write(pack('>i', h))
 # Process each file
 for i in range(0, len(imageFiles)):
     # First, convert image to grayscale 
-    imageNameWithoutExt= imageFiles[i][:len(imageFiles[i])-4]
+    # '/Users/papa/vcs/github/brt/scaffold/buildTtDataset2/chessmen/ab001.png'
+    imageNameWithoutExt= imageFiles[i][len(imageFiles[i])-9:]
     label = imageNameWithoutExt[0:1]
     print ("Label is: " +  label)
     
     # write the label
-    labelDataFile.write(pack('B', ord(label)))
+    labelDataFile.write(pack('B', ord(label[:1])))
     
-    img = Image.open(imagesPath+imageFiles[i]).convert('L') 
+    img = Image.open(imageFiles[i]).convert('L') 
     # not LA , which means alpha; 这里转成灰度图
     
     imgFiltered = img # filterAndRevert(img) 不做过滤先
