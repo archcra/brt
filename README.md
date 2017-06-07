@@ -14,3 +14,10 @@ Board Recognizor of Tiantian
 
 scaffold 目录下的getChessmen中，介绍了如何使用simpleCV截出棋子的方法。
 
+一个手机截屏的棋盘图例如下：
+
+![天天的象棋盘](/resources/full-board.jpg)
+
+我们的目标，就是上传一个图片，返回一个fen串。如完整的棋盘，返回这样的串：
+
+rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR
